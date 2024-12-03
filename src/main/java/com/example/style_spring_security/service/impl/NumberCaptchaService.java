@@ -26,7 +26,7 @@ public class NumberCaptchaService extends AbstractCaptchaGeneratorServiceImpl {
     public Captcha generate() {
         // 生成随机Redis key
         String key = UUID.randomUUID().toString();
-        Integer code = NumberCaptchaGenerateUtil.generateValidateCode(4);
+        String code = NumberCaptchaGenerateUtil.generateValidateCode(4);
 
         redisUtil.setCacheObject(key, code, CAPTCHA_EXPIRE_TIME);
         log.info("验证码：{}，key: {}", code, key);

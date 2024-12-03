@@ -60,27 +60,16 @@ public class SecurityConfiguration {
         // 使用BCryptPasswordEncoder来加密密码
         return new BCryptPasswordEncoder(); // 返回 BCryptPasswordEncoder 实例
     }
-
-
-    //    /**
-//     * AuthenticationManager 的 Bean 定义。
-//     * 使用 AuthenticationConfiguration 获取 AuthenticationManager 实例。
-//     *
-//     * @param authenticationConfiguration 用于获取 AuthenticationManager 的配置对象。
-//     * @return 构建好的 AuthenticationManager。
-//     * @throws Exception 如果在构建过程中发生错误。
-//     */
-//    @Bean
-//    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-//        // 使用 AuthenticationConfiguration 获取 AuthenticationManager 实例
-//        return authenticationConfiguration.getAuthenticationManager();
-//    }
     @Bean
     public SystemSecurityMetadataSource systemSecurityMetadataSource() {
         return new SystemSecurityMetadataSource();
     }
 
-
+    /**
+     * username 密码登录的 DaoAuthenticationProvider 的 Bean 定义。
+     * @param userDetailService
+     * @return
+     */
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider(UserDetailsService userDetailService) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
@@ -89,11 +78,22 @@ public class SecurityConfiguration {
         return provider;
     }
 
+    /**
+     * email 密码登录的 DaoAuthenticationProvider 的 Bean 定义。
+     * @param userService
+     * @return
+     */
     @Bean
     public EmailCodeAuthenticationProvider emailCodeAuthenticationProvider(UserDetailServiceImpl userService) {
         return new EmailCodeAuthenticationProvider(userService);
     }
 
+    /**
+     * prover 管理器的 Bean 定义。
+     * @param emailCodeAuthenticationProvider
+     * @param daoAuthenticationProvider
+     * @return
+     */
     @Bean
     public AuthenticationManager authenticationManager(
             EmailCodeAuthenticationProvider emailCodeAuthenticationProvider,
@@ -101,11 +101,19 @@ public class SecurityConfiguration {
         return new ProviderManager(emailCodeAuthenticationProvider, daoAuthenticationProvider);
     }
 
+    /**
+     * email 登录的 EmailCodeAuthenticationFilter 的 Bean 定义。
+     * @param loginSuccessHandler
+     * @param loginFailureHandler
+     * @param authenticationManager
+     * @return
+     */
     @Bean
     public EmailCodeAuthenticationFilter emailCodeAuthenticationFilter(LoginSuccessHandler loginSuccessHandler,
                                                                        LoginFailureHandler loginFailureHandler,
                                                                        AuthenticationManager authenticationManager) {
         EmailCodeAuthenticationFilter emailCodeAuthenticationFilter = new EmailCodeAuthenticationFilter();
+        // 设置认证成功和失败处理器 必须设置
         emailCodeAuthenticationFilter.setAuthenticationSuccessHandler(loginSuccessHandler);
         emailCodeAuthenticationFilter.setAuthenticationFailureHandler(loginFailureHandler);
         emailCodeAuthenticationFilter.setAuthenticationManager(authenticationManager);
@@ -125,12 +133,16 @@ public class SecurityConfiguration {
                                                    JwtAccessDeniedHandler jwtAccessDeniedHandler,
                                                    JwtUtils jwtUtils,
                                                    RedisUtil redisUtil,
-                                                   EmailCodeAuthenticationFilter emailCodeAuthenticationFilter
+                                                   EmailCodeAuthenticationFilter emailCodeAuthenticationFilter,
+                                                   LoginSuccessHandler loginSuccessHandler,
+                                                   LoginFailureHandler loginFailureHandler
     ) throws Exception {
 
         http.cors(Customizer.withDefaults()) // 启用默认的跨域资源共享（CORS）配置
                 .csrf(AbstractHttpConfigurer::disable) // 禁用跨站请求伪造（CSRF）
-                .formLogin(Customizer.withDefaults()) // 设置登录失败处理器
+                .formLogin(formLogin -> formLogin // 启用表单登录配置 必须设置，否则username登陆时会重定向到/
+                        .successHandler(loginSuccessHandler) // 设置登录成功处理器
+                        .failureHandler(loginFailureHandler)) // 设置登录失败处理器
                 .logout(logout -> logout // 启用登出配置
                         .logoutSuccessHandler(jwtLogoutSuccessHandler)) // 设置登出成功处理器
                 .sessionManagement(sessionManagement -> sessionManagement // 启用会话管理配置

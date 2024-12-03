@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 验证码过滤器
@@ -24,6 +26,10 @@ import java.io.IOException;
  */
 @Component
 public class CaptchaFilter extends OncePerRequestFilter {
+
+    // 定义一个正则表达式来匹配 /login 或 /**/login
+    private static final Pattern LOGIN_PATH_PATTERN = Pattern.compile("^/.*/login$|^/login$");
+
     @Autowired
     RedisUtil redisUtil;
     @Autowired
@@ -31,7 +37,7 @@ public class CaptchaFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
         String url = httpServletRequest.getRequestURI();
-        if ("/login".equals(url) && httpServletRequest.getMethod().equals("POST")) {
+        if (isLoginUrl(url) && httpServletRequest.getMethod().equals("POST")) {
             // 校验验证码
             try {
                 validate(httpServletRequest);
@@ -67,7 +73,14 @@ public class CaptchaFilter extends OncePerRequestFilter {
         redisUtil.deleteObject(key);
     }
 
-
-
+    /**
+     * 匹配登录url: /login /email/login等
+     * @param url
+     * @return
+     */
+    private static boolean isLoginUrl(String url) {
+        Matcher matcher = LOGIN_PATH_PATTERN.matcher(url);
+        return matcher.matches();
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.example.style_spring_security.domain;
 
+import com.example.style_spring_security.entity.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,7 +19,7 @@ public abstract class SecurityHelper {
         if (context != null) {
             Authentication authInfo = context.getAuthentication();
             if (authInfo != null) {
-                userInfo = (AccountUser) authInfo.getPrincipal();
+                userInfo = new AccountUser((User) authInfo.getPrincipal(), null);
             }
         }
         if (userInfo == null){

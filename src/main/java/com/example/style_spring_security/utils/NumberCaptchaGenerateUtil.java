@@ -21,7 +21,7 @@ public class NumberCaptchaGenerateUtil {
      * @param length 长度为4位或者6位
      * @return
      */
-    public static Integer generateValidateCode(int length){
+    public static String generateValidateCode(int length){
         if (length < 4) {
             throw new CaptchaException("验证码长度至少4位");
         }
@@ -31,7 +31,7 @@ public class NumberCaptchaGenerateUtil {
         if (code < minRandom){
             code = code + minRandom;
         }
-        return code;
+        return String.valueOf(code);
     }
 
 

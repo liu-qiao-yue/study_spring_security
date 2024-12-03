@@ -40,11 +40,6 @@ public class EmailCodeAuthenticationFilter extends AbstractAuthenticationProcess
      */
     private final boolean postOnly = true;
 
-//
-//    @Override
-//    public void setAuthenticationManager(AuthenticationManager authenticationManager) {
-//        super.setAuthenticationManager(authenticationManager);
-//    }
 
     /**
      * 通过 传入的 参数 创建 匹配器
@@ -53,10 +48,6 @@ public class EmailCodeAuthenticationFilter extends AbstractAuthenticationProcess
     public EmailCodeAuthenticationFilter() {
         super(EMAIL_CODE_PATH_REQUEST_MATCHER);
     }
-
-//    public EmailCodeAuthenticationFilter(AuthenticationManager authenticationManager) {
-//        super(EMAIL_CODE_PATH_REQUEST_MATCHER, authenticationManager);
-//    }
 
 
     /**
@@ -69,8 +60,6 @@ public class EmailCodeAuthenticationFilter extends AbstractAuthenticationProcess
             throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
         }
         String email = getEmail(request);
-//        //如果 验证码不相等 故意让token出错 然后走springsecurity 错误的流程
-//        boolean flag = checkCode(request);
         //封装 token
         EmailCodeAuthenticationToken token = new EmailCodeAuthenticationToken(email, new ArrayList<>());
         this.setDetails(request, token);
@@ -91,18 +80,5 @@ public class EmailCodeAuthenticationFilter extends AbstractAuthenticationProcess
     private String getEmail(HttpServletRequest request) {
         return Optional.ofNullable(request.getParameter(DEFAULT_EMAIL_NAME)).orElse("").trim();
     }
-//
-//    /**
-//     * 判断 传来的 验证码信息 以及 session 中的验证码信息
-//     */
-//    public boolean checkCode(HttpServletRequest request) {
-//        String code1 = request.getParameter(DEFAULT_EMAIL_CODE);
-//        System.out.println("code1**********" + code1);
-//        //TODO  这里的验证码 写在Redis中，验证之后 删除验证码
-//        if (code1.equals("123456")) {
-//            return true;
-//        }
-//        return false;
-//    }
 
 }

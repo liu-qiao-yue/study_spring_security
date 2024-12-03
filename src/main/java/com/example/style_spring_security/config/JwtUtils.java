@@ -68,7 +68,7 @@ public class JwtUtils {
      * @param uuid      uuid
      * @return JwtBuilder
      */
-    private  JwtBuilder getJwtBuilder(String subject, Long ttlMillis, String uuid) {
+    private JwtBuilder getJwtBuilder(String subject, Long ttlMillis, String uuid) {
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
         SecretKey secretKey = generalKey();
         long nowMillis = System.currentTimeMillis();
