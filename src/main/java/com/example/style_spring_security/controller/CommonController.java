@@ -31,4 +31,10 @@ public class CommonController {
     public AccountUser userInfo() {
         return getUserInfo();
     }
+
+
+    @GetMapping("/captcha/number")
+    public Captcha captchaNumber() {
+        return captchaService.getCaptcha(CaptchaType.NUMBER.name());
+    }
 }

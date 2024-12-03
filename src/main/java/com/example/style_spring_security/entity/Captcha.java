@@ -18,4 +18,5 @@ public class Captcha {
      * 验证码图片 base64
      */
     private String captchaImg;
+
 }

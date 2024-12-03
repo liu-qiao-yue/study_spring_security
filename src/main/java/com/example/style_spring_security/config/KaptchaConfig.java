@@ -12,6 +12,11 @@ import java.util.Properties;
  */
 @Configuration
 public class KaptchaConfig {
+
+    /**
+     * 数字字母验证码生成器
+     * @return
+     */
     @Bean
     DefaultKaptcha producer() {
         Properties properties = new Properties();

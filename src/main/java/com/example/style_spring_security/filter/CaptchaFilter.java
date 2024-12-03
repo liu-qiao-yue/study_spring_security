@@ -1,5 +1,6 @@
 package com.example.style_spring_security.filter;
 
+import com.example.style_spring_security.enums.CaptchaType;
 import com.example.style_spring_security.exception.CaptchaException;
 import com.example.style_spring_security.handle.LoginFailureHandler;
 import com.example.style_spring_security.utils.RedisUtil;
@@ -48,7 +49,12 @@ public class CaptchaFilter extends OncePerRequestFilter {
      * @param httpServletRequest
      */
     private void validate(HttpServletRequest httpServletRequest) {
-        String code = httpServletRequest.getParameter("code");
+        // 获取验证码类型
+        String validateTypeCode = httpServletRequest.getParameter("validateType");
+
+        CaptchaType captchaType = CaptchaType.getCaptchaTypeByTypeCode(validateTypeCode);
+
+        String code = httpServletRequest.getParameter(captchaType.getCaptchaKey());
         String key = httpServletRequest.getParameter("userKey");
         if (StringUtils.isBlank(code) || StringUtils.isBlank(key)) {
             throw new CaptchaException("验证码错误");
@@ -60,4 +66,8 @@ public class CaptchaFilter extends OncePerRequestFilter {
         // 一次性使用
         redisUtil.deleteObject(key);
     }
+
+
+
+
 }

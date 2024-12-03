@@ -43,15 +43,12 @@ public class UserDetailServiceImpl implements UserDetailsService {
         queryWrapper.eq(User::getUserName, username);
         User user = userMapper.selectOne(queryWrapper);
         if (Objects.isNull(user)){
-            throw new RuntimeException("用户名或密码错误");
+            throw new UsernameNotFoundException("用户名或密码错误");
         }
 
 
-        // 查询用户的权限信息
-        List<GrantedAuthority> authorities = getUserAuthorities(user.getId());
-
         // 5.2 把对应的用户信息包括权限信息封装成UserDetails对象
-        return new AccountUser(user, authorities);
+        return new AccountUser(user, getUserAuthorities(user.getId()));
     }
 
     public List<GrantedAuthority> getUserAuthorities(Long userId) {
@@ -60,4 +57,19 @@ public class UserDetailServiceImpl implements UserDetailsService {
         resources.forEach(resource -> authorities.add(new CustomGrantedAuthority(resource)));
         return authorities;
     }
+
+    public UserDetails loadUserByEmail(String email) throws UsernameNotFoundException {
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(User::getEmail, email);
+        List<User> users = userMapper.selectList(queryWrapper);
+
+        if (users.size() != 1){
+            throw new UsernameNotFoundException("用户信息异常");
+        }
+
+        User user = users.getFirst();
+
+        return new AccountUser(user, getUserAuthorities(user.getId()));
+    }
+
 }
