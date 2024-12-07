@@ -13,13 +13,13 @@ import java.util.Arrays;
 @Getter
 public enum CaptchaType {
     /**
-     * 数字字母验证码。
+     * 数字字母验证码。done
      * 通常用于需要用户输入数字和字母组合的场景。
      */
     ALPHANUMERIC("01", "code"),
 
     /**
-     * 数字验证码。
+     * 数字验证码。done
      * 邮件等场景。
      */
     EMAIL("02",  "e_code"),
@@ -32,21 +32,26 @@ public enum CaptchaType {
 
     /**
      * X、Y验证码。
-     * 旋转验证码、滑动验证码等场景。
+     * 滑动验证码场景。
      */
-    COORDINATE("03", ""),
+    SLIDE("03", "s_code"),
 
     /**
-     * 旋转验证码。
+     * 旋转验证码。旋转多少度
      * 用户需要通过旋转操作来完成验证，通常用于增加验证码的复杂度。
      */
-    ROTATION("04", ""),
+    ROTATION("04", "r_code"),
 
     /**
-     * 多次数点击验证码。
-     * 用户需要点击特定的图片或元素来完成验证，通常用于增加验证码的互动性。
+     * X、Y验证码
+     * 单次点击验证码，用户需要点击特定的图片或元素来完成验证，通常用于增加验证码的互动性。
+     * 可以是点击几次或多次
      */
-    COORDINATES("05", "");
+    COORDINATE("05", "c_code"),
+    /**
+     * 数字计算验证码 done
+     */
+    COMPUTE("07", "c_code");
 
     private final String typeCode;
 

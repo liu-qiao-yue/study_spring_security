@@ -82,9 +82,9 @@
         </dependency>
         <!-- 谷歌的验证码工具类 -->
         <dependency>
-            <groupId>com.github.axet</groupId>
+            <groupId>com.github.penggle</groupId>
             <artifactId>kaptcha</artifactId>
-            <version>0.0.9</version>
+            <version>2.3.2</version>
         </dependency>
         <!-- Apache编码解码工具 -->
         <dependency>
