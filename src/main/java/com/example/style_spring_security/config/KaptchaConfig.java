@@ -21,10 +21,15 @@ public class KaptchaConfig {
     DefaultKaptcha producer() {
         Properties properties = new Properties();
         properties.put("kaptcha.border", "no");
+        // 验证码文本字符颜色
         properties.put("kaptcha.textproducer.font.color", "black");
+        // 验证码文本字符大小
         properties.put("kaptcha.textproducer.char.space", "4");
+        //验证码图片高
         properties.put("kaptcha.image.height", "40");
+        //验证码图片宽
         properties.put("kaptcha.image.width", "120");
+        // 验证码文本字符大小
         properties.put("kaptcha.textproducer.font.size", "30");
         Config config = new Config(properties);
         DefaultKaptcha defaultKaptcha = new DefaultKaptcha();

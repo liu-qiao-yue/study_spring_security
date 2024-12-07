@@ -1,6 +1,7 @@
 package com.example.style_spring_security.service;
 
 import com.example.style_spring_security.entity.Captcha;
+import com.example.style_spring_security.entity.User;
 
 public interface CaptchaGeneratorService {
     /**
@@ -14,5 +15,5 @@ public interface CaptchaGeneratorService {
      * 生成验证码
      * @return Captcha
      */
-    Captcha generate();
+    Captcha generate(User user);
 }

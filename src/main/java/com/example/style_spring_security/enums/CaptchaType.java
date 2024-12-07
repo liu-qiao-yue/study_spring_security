@@ -20,9 +20,15 @@ public enum CaptchaType {
 
     /**
      * 数字验证码。
-     * 短信/邮件等场景。
+     * 邮件等场景。
      */
-    NUMBER("02",  "n_code"),
+    EMAIL("02",  "e_code"),
+
+    /**
+     * 数字验证码。
+     * 短信等场景。
+     */
+    SMS("06",  "s_code"),
 
     /**
      * X、Y验证码。

@@ -3,6 +3,7 @@ package com.example.style_spring_security.service.impl;
 import cn.hutool.core.codec.Base64Encoder;
 import cn.hutool.core.lang.UUID;
 import com.example.style_spring_security.entity.Captcha;
+import com.example.style_spring_security.entity.User;
 import com.example.style_spring_security.enums.CaptchaType;
 import com.example.style_spring_security.exception.CaptchaException;
 import com.google.code.kaptcha.Producer;
@@ -33,7 +34,7 @@ public class AlphanumericCaptchaService extends AbstractCaptchaGeneratorServiceI
     }
 
     @Override
-    public Captcha generate() {
+    public Captcha generate(User user) {
         // 生成随机Redis key
         String key = UUID.randomUUID().toString();
         // 生成验证码

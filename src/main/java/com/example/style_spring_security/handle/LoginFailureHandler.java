@@ -26,7 +26,7 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
         String errorMessage = "用户名或密码错误";
         R result;
         if (e instanceof CaptchaException) {
-            errorMessage = "验证码错误";
+            errorMessage = e.getMessage();
         }
         result = R.error(errorMessage);
         outputStream.write(JSONUtil.toJsonStr(result).getBytes(StandardCharsets.UTF_8));

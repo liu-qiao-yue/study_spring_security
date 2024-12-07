@@ -46,7 +46,8 @@ public class SecurityConfiguration {
             "/logout",      // 登出接口
             "/captcha",     // 验证码接口
             "/captcha/**",
-            "/error"
+            "/error",
+            "/getCaptcha"
     };
 
     /**

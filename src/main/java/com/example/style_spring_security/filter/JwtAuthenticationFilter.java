@@ -50,14 +50,11 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             return;
         }
         Claims claim = jwtUtils.extractAllClaims(jwt);
-        if (claim == null) {
-            throw new JwtException("token 异常");
+        if (claim == null || Boolean.TRUE.equals(jwtUtils.isTokenExpired(jwt))) {
+            SecurityContextHolder.clearContext(); // 清除上下文中的认证信息
+            throw new JwtException("Invalid or expired token");
         }
 
-
-        if (Boolean.TRUE.equals(jwtUtils.isTokenExpired(jwt))) {
-            throw new JwtException("token 已过期");
-        }
         // 获取用户的权限等信息
         AccountUser accountUser = (AccountUser) redisUtil.getCacheObject(jwt);
         // 构建UsernamePasswordAuthenticationToken,这里密码为null，是因为提供了正确的JWT,实现自动登录

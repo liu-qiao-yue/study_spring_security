@@ -6,7 +6,7 @@ import java.io.Serial;
  * 自定义异常用于拦截敏感信息
  * @author ellie
  */
-public class MaskException extends RuntimeException {
+public class MaskException extends CustomException {
     @Serial
     private static final long serialVersionUID = 1L;
 

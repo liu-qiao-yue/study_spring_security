@@ -1,7 +1,9 @@
 package com.example.style_spring_security.service.impl;
 
 import com.example.style_spring_security.entity.Captcha;
+import com.example.style_spring_security.entity.User;
 import com.example.style_spring_security.enums.CaptchaType;
+import com.example.style_spring_security.utils.MailUtils;
 import com.example.style_spring_security.utils.NumberCaptchaGenerateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,14 +18,15 @@ import java.util.UUID;
  */
 @Slf4j
 @Service
-public class NumberCaptchaService extends AbstractCaptchaGeneratorServiceImpl {
+public class EmailCaptchaService extends AbstractCaptchaGeneratorServiceImpl {
+
     @Override
     public boolean support(String captchaType) {
-        return  CaptchaType.isMatchingCaptchaType(captchaType, CaptchaType.NUMBER);
+        return  CaptchaType.isMatchingCaptchaType(captchaType, CaptchaType.EMAIL);
     }
 
     @Override
-    public Captcha generate() {
+    public Captcha generate(User user) {
         // 生成随机Redis key
         String key = UUID.randomUUID().toString();
         String code = NumberCaptchaGenerateUtil.generateValidateCode(4);
@@ -31,7 +34,7 @@ public class NumberCaptchaService extends AbstractCaptchaGeneratorServiceImpl {
         redisUtil.setCacheObject(key, code, CAPTCHA_EXPIRE_TIME);
         log.info("验证码：{}，key: {}", code, key);
 
-        //todo 发送验证码
+        MailUtils.sendEmail(SMS_SUBJECT, String.format(SMS_CONTENT, code), user.getEmail(), null);
         return Captcha.builder()
                 .captchaKey(key)
                 .build();
